@@ -34,7 +34,7 @@ for line in filehandle:
    print(text3)
    text4 = re.findall('\d+', text3[0]) 
    print(text4)
-   if(len(text4)!=0 and text4[0]!=0):
+   if(len(text4)!=0 and text4[0]!='0'):
       print("There were", text4[0], "results.\n")
       # here i could put a function to grab rxn details
       row = []
