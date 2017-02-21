@@ -1,5 +1,5 @@
 # Chemhacktica
 
-Scrape - to scrape Chemnet
+Scrape - to scrape for casrn's 
 
-Crawl - to crawl NIST solution kinetics DB
+Crawl - to crawl for reactions
