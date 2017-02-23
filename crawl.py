@@ -4,6 +4,7 @@ import requests
 import re
 import random
 import time 
+import socket 
 
 # ============================================================================================
 def getpage(url,payload):
@@ -15,7 +16,6 @@ def getpage(url,payload):
    again=True
    while(again):
       try:
-#         page = requests.get(pagename, timeout=(9.05, 33.12))
          r = requests.post(url, data = payload, timeout=(9,33.3))
          if(r.status_code==200):
             print('Status OK: ', r.status_code)
@@ -24,12 +24,18 @@ def getpage(url,payload):
             print('Status not OK: ', r.status_code)        
             print('sleeping for', sleepy_time, 'seconds.....')
             time.sleep(sleepy_time)
-      except Exception as e1:
-         print('Exception: ', e1)
+      except socket.gaierror as e:
+         print("SOCKET.GAIERROR!!!!")
+         print('error: ', e)
          print('sleeping for', sleepy_time, 'seconds.....')
          time.sleep(sleepy_time)
-      except socket.gaierror as e2:
-         print('error: ', e2)
+      except socket.timeout as e:
+         print("SOCKET.TIMEOUT!!!!")
+         print('error: ', e)
+         print('sleeping for', sleepy_time, 'seconds.....')
+         time.sleep(sleepy_time)
+      except Exception as e:
+         print('Exception: ', e)
          print('sleeping for', sleepy_time, 'seconds.....')
          time.sleep(sleepy_time)
 
@@ -37,7 +43,7 @@ def getpage(url,payload):
 
 # ============================================================================================
 # FILE INFO
-filename = "/home/indra/Documents/Projects/CRN_4TV/DATA/CASRN/result_files/checked/cas_data_1.txt"
+filename = "/home/indra/Documents/Projects/CRN_4TV/DATA/CASRN/result_files/checked/FOR_NIST_CRAWL/cas_data_1.txt"
 filehandle= open(filename, "r")
 #outfilename = "/home/indra/Documents/Projects/CRN_4TV/DATA/CASRN/result_files/cas_nist_1.txt"
 outfilename = "/home/indra/Documents/Projects/Chemhacktica/test_output.txt"
