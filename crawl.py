@@ -9,14 +9,14 @@ import socket
 # ============================================================================================
 def getpage(url,payload):
 
+   # define time delays 
    delay = random.uniform(1,1.5)
    sleepy_time = delay*19.19
-   r = requests.post(url, data = payload)
-
+   
    again=True
    while(again):
       try:
-         r = requests.post(url, data = payload, timeout=(9,33.3))
+         r = s.post(url, data = payload, timeout=(9,33.3))
          if(r.status_code==200):
             print('Status OK: ', r.status_code)
             again=False
@@ -24,16 +24,14 @@ def getpage(url,payload):
             print('Status not OK: ', r.status_code)        
             print('sleeping for', sleepy_time, 'seconds.....')
             time.sleep(sleepy_time)
-      except socket.gaierror as e:
-         print("SOCKET.GAIERROR!!!!")
-         print('error: ', e)
-         print('sleeping for', sleepy_time, 'seconds.....')
-         time.sleep(sleepy_time)
-      except socket.timeout as e:
-         print("SOCKET.TIMEOUT!!!!")
-         print('error: ', e)
-         print('sleeping for', sleepy_time, 'seconds.....')
-         time.sleep(sleepy_time)
+#      except socket.gaierror as e:
+#         print('error: ', e)
+#         print('sleeping for', sleepy_time, 'seconds.....')
+#         time.sleep(sleepy_time)
+#      except socket.timeout as e:
+#         print('error: ', e)
+#         print('sleeping for', sleepy_time, 'seconds.....')
+#         time.sleep(sleepy_time)
       except Exception as e:
          print('Exception: ', e)
          print('sleeping for', sleepy_time, 'seconds.....')
@@ -48,6 +46,9 @@ filehandle= open(filename, "r")
 #outfilename = "/home/indra/Documents/Projects/CRN_4TV/DATA/CASRN/result_files/cas_nist_1.txt"
 outfilename = "/home/indra/Documents/Projects/Chemhacktica/test_output.txt"
 outhandle = open(outfilename, "w")
+
+# create session for connection pooling as we are hitting the same database repeatedly
+s = requests.Session()
 
 # URL
 url = 'http://kinetics.nist.gov/solution/SearchForm'
