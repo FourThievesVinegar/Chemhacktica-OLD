@@ -65,8 +65,9 @@ def getrxns(s, tree):
       # ... determine number of reactants
       # ... ... count # of times 'Name' appears
       # ... ... within each reactant block, test is 'CAS Number' is there, if not, give blank value
-      rct_block = tree.xpath('//font[text()="Reactant details"]/following-sibling::b/text()')
-#      rct_block = tree.xpath('//*[text()="Name"]')
+      rct_block = tree.xpath('(//font[text()="Reactant details"]/following::*)[3]')
+      #rct_block = tree.xpath('(//font[text()="Reactant details"]/following::*)[2]/text()')
+      #rct_block = tree.xpath('//font[text()="Reactant details"]/following-sibling::*')
 #      rct_block = tree.xpath('//b[text()="Reactant Details"]/following-sibling::b[text()="Name"][1]/preceding-sibling::b[text()="Product Details"]')
       print(rct_block)
 
