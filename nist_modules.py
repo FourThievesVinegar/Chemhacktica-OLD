@@ -62,25 +62,24 @@ def getrxns(s, tree):
       r = getpage(s, url)
       tree = html.fromstring(r.content)
       # reactant details
-      # ... determine number of reactants
-      # ... ... count # of times 'Name' appears
-      # ... ... within each reactant block, test is 'CAS Number' is there, if not, give blank value
-      #rct_block = tree.xpath('(//font[text()="Reactant details"]/following::*)')
-      #rct_block = tree.xpath('(//font[text()="Reactant details"]/following::*)[2]/text()')
-      #rct_block = tree.xpath('//font[text()="Reactant details"]/following-sibling::*')
-      #rct_block = tree.xpath('//font[text()="Reactant Details"]/following-sibling::b[text()="Name"]/preceding-sibling::br/text()')
-      #rct_block = tree.xpath('(//font[text()="Reactant Details"]/b[text()="Name"]/following::*)')
-      #rct_block = tree.xpath('(//font[text()="Reactant Details"]/following-sibling::b[text()="Name"])')
-      rct_block = tree.xpath('//p/font[text()="Reactant Details"]')
-      print(rct_block)
+      # ... ensure there are reactants, products and solvents in the reaction info
+      blocks = tree.xpath('(//b[text()="Name"]/preceding-sibling::b/font/text())')
+      if(len(blocks)==3):
+         print(blocks)
+         # get reactant info 
+         #rct_block = tree.xpath('//b/font[text()="Reactant details"]/preceding-sibling::*')
+         #rct_block = tree.xpath('(//font[text()="Reactant details"]/following::*)[2]/text()')
+         #rct_block = tree.xpath('//p/font[text()="Reactant Details"]')
+         print(rct_block)
 
-      exit()     
-
+#        exit()     
+      else:
+         print("Incomplete reaction information")
+         print(len(blocks))
 
       # restructure data if necessary
 
 #   return rxns
-
 
 # ============================================================================================
 
