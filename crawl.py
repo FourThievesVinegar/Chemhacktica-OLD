@@ -23,9 +23,9 @@ url = 'http://kinetics.nist.gov/solution/SearchForm'
 for line in filehandle:
    print('===============================')
    fields = line.split('|')
-   rct1 = fields[0] 
+   #rct1 = fields[0] 
+   rct1 = "100-00-5"
    print(rct1)
-#   rct1 = "100-00-5"
    payload = {"database":"solution",
               "REACTANT1":rct1, "REACTANT2":"", "REACTANT3":"", 
               "PRODUCT1":"", "PRODUCT2":"", "PRODUCT3":"", 

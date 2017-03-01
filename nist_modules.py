@@ -64,6 +64,15 @@ def getrxns(s, tree):
       # reactant details
       # ... ensure there are reactants, products and solvents in the reaction info
       blocks = tree.xpath('(//b[text()="Name"]/preceding-sibling::b/font/text())')
+      col = tree.xpath('//p[text()=":"]')
+      ns1 = '//b/font[text()="Reactant details"]'
+      ns2 = '//b/font[text()="Product details"]'
+      #nints = ns1 + '[count(.|'+ ns2 + ') = count(' + ns2 + ')]'
+      nints = '//b/font[text()="Reactant details"][.=//b/font[text()="Product details"]]'
+      rct_block = tree.xpath(nints)
+      #rct_block = tree.xpath(ns2)
+      print(rct_block)
+      exit()
       if(len(blocks)==3):
          print(blocks)
          # get reactant info 
