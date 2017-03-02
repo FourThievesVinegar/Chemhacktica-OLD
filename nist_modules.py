@@ -61,29 +61,20 @@ def getrxns(s, tree):
       url = 'http://kinetics.nist.gov/solution/' +  d
       r = getpage(s, url)
       tree = html.fromstring(r.content)
-      # reactant details
       # ... ensure there are reactants, products and solvents in the reaction info
       blocks = tree.xpath('(//b[text()="Name"]/preceding-sibling::b/font/text())')
-      col = tree.xpath('//p[text()=":"]')
-      ns1 = '//b/font[text()="Reactant details"]'
-      ns2 = '//b/font[text()="Product details"]'
-      #nints = ns1 + '[count(.|'+ ns2 + ') = count(' + ns2 + ')]'
-      nints = '//b/font[text()="Reactant details"][.=//b/font[text()="Product details"]]'
-      rct_block = tree.xpath(nints)
-      #rct_block = tree.xpath(ns2)
-      print(rct_block)
-      exit()
       if(len(blocks)==3):
-         print(blocks)
          # get reactant info 
-         #rct_block = tree.xpath('//b/font[text()="Reactant details"]/preceding-sibling::*')
-         #rct_block = tree.xpath('(//font[text()="Reactant details"]/following::*)[2]/text()')
-         #rct_block = tree.xpath('//p/font[text()="Reactant Details"]')
-         print(rct_block)
-
-#        exit()     
+         xpath = '//p/b/font[text()="Reactant details"]/parent::*/parent::*/descendant-or-self::*/text()'
+         rct_block = tree.xpath(xpath)
+         rct_block2 = [el.replace('\n', '') for el in rct_block]
+         rct_block3 = [el.replace('\xa0', '') for el in rct_block2]
+         rct_block3 = [el.replace('\xa0', '') for el in rct_block2]
+         rct_block4 = list(filter(None, rct_block3))
+         print(rct_block4)
+         exit()     
       else:
-         print("Incomplete reaction information")
+         print("Incomplete reaction information - data not collected")
          print(len(blocks))
 
       # restructure data if necessary
