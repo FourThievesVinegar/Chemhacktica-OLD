@@ -3,6 +3,9 @@ import random
 import time 
 
 # ============================================================================================
+def mult_repl(text, adict):
+   rx = re.compile('|'.join(map(re.escape, adict)))
+# ============================================================================================
 def postpage(s, url, payload):
 
    # define time delays 
@@ -61,18 +64,28 @@ def getrxns(s, tree):
       url = 'http://kinetics.nist.gov/solution/' +  d
       r = getpage(s, url)
       tree = html.fromstring(r.content)
-      # ... ensure there are reactants, products and solvents in the reaction info
+      # ... ensure there are reactant, product and solvent blocks in the reaction info
       blocks = tree.xpath('(//b[text()="Name"]/preceding-sibling::b/font/text())')
+      # now, get all reaction info only if all three blocks are present
       if(len(blocks)==3):
-         # get reactant info 
-         xpath = '//p/b/font[text()="Reactant details"]/parent::*/parent::*/descendant-or-self::*/text()'
-         rct_block = tree.xpath(xpath)
-         rct_block2 = [el.replace('\n', '') for el in rct_block]
-         rct_block3 = [el.replace('\xa0', '') for el in rct_block2]
-         rct_block3 = [el.replace('\xa0', '') for el in rct_block2]
-         rct_block4 = list(filter(None, rct_block3))
-         print(rct_block4)
+         # get reactant info, clean it up, and insert missing info (if present)
+         # NEED TO GET SIBLING!! crap.
+         rct_xpath = '//p/b/font[text()="Reactant details"]/parent::*/parent::*/descendant-or-self::*/text()'
+         rct_block = tree.xpath(rct_xpath)
+
+         print(rct_block5)
          exit()     
+
+#         rct_block2 = [el.replace('\n', '') for el in rct_block]
+#         rct_block3 = [el.replace('\xa0', '') for el in rct_block2]
+#         rct_block4 = [el.replace(':', '') for el in rct_block3]
+3         rct_block5 = list(filter(None, rct_block4))
+            # ... test that Name, Formula, CAS number, and Other Names are present, of not, give them
+            # ... blank values
+
+         # get product info
+
+         # get solvent info
       else:
          print("Incomplete reaction information - data not collected")
          print(len(blocks))
