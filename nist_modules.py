@@ -64,28 +64,36 @@ def getrxns(s, tree):
       url = 'http://kinetics.nist.gov/solution/' +  d
       r = getpage(s, url)
       tree = html.fromstring(r.content)
-      # ... ensure there are reactant, product and solvent blocks in the reaction info
+      # ensure there are reactant, product and solvent blocks in the reaction info
       blocks = tree.xpath('(//b[text()="Name"]/preceding-sibling::b/font/text())')
-      # now, get all reaction info only if all three blocks are present
       if(len(blocks)==3):
-         # get reactant info, clean it up, and insert missing info (if present)
-         # NEED TO GET SIBLING!! crap.
-         rct_xpath = '//p/b/font[text()="Reactant details"]/parent::*/parent::*/descendant-or-self::*/text()'
-         rct_block = tree.xpath(rct_xpath)
-
-         print(rct_block5)
-         exit()     
-
+          # so beautiful i dont want to delete it............
+#         body_xpath = '//p/b/font[text()="Reactant details"]/parent::*/parent::*/parent::*/descendant-or-self::*/text()'
+         body_xpath = '//body/descendant-or-self::*/text()'
+         body_fulltext = tree.xpath(body_xpath)
+         start_index = body_fulltext.index("Reactant details")
+         reaction_text = body_fulltext[start_index : ]
+         # next clean up using multiple replacements
 #         rct_block2 = [el.replace('\n', '') for el in rct_block]
 #         rct_block3 = [el.replace('\xa0', '') for el in rct_block2]
 #         rct_block4 = [el.replace(':', '') for el in rct_block3]
-3         rct_block5 = list(filter(None, rct_block4))
-            # ... test that Name, Formula, CAS number, and Other Names are present, of not, give them
-            # ... blank values
+#         rct_block5 = list(filter(None, rct_block4))
 
-         # get product info
+         # insert missing CAS number placeholders
 
-         # get solvent info
+         # keep only Name, Formula, CAS number
+
+         # separate into Reactants, Products, Solvents
+
+         # convert to storable format
+
+         # rejoice!
+#         print(body_fulltext)
+         print(start_index)
+         print(reaction_text)
+
+         exit()     
+
       else:
          print("Incomplete reaction information - data not collected")
          print(len(blocks))

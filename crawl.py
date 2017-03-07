@@ -46,7 +46,7 @@ for line in filehandle:
          outhandle.writelines(row+'\n')
       elif(len(text4)==0):
          print("There were", len(text4), "results.\n")
-   except IndexError:
+   except IndexError: 
       print("Anomalous CASRN: ", rct1)
       row = []
       row = " | ".join([rct1, fields[1], fields[2]])
