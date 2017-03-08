@@ -1,6 +1,7 @@
 from lxml import html
 import random
 import time 
+import re 
 
 # ============================================================================================
 def mult_repl(text, adict):
@@ -67,30 +68,32 @@ def getrxns(s, tree):
       # ensure there are reactant, product and solvent blocks in the reaction info
       blocks = tree.xpath('(//b[text()="Name"]/preceding-sibling::b/font/text())')
       if(len(blocks)==3):
+          # go about isolating reaction info (all three blocks mentioned above)
           # so beautiful i dont want to delete it............
 #         body_xpath = '//p/b/font[text()="Reactant details"]/parent::*/parent::*/parent::*/descendant-or-self::*/text()'
-         body_xpath = '//body/descendant-or-self::*/text()'
-         body_fulltext = tree.xpath(body_xpath)
-         start_index = body_fulltext.index("Reactant details")
-         reaction_text = body_fulltext[start_index : ]
+         body_path = '//body/descendant-or-self::*/text()'
+         body_text = tree.xpath(body_path)
+         start_index = body_text.index("Reactant details")
+         rxn_dirty = body_text[start_index : ]
          # next clean up using multiple replacements
-#         rct_block2 = [el.replace('\n', '') for el in rct_block]
-#         rct_block3 = [el.replace('\xa0', '') for el in rct_block2]
-#         rct_block4 = [el.replace(':', '') for el in rct_block3]
-#         rct_block5 = list(filter(None, rct_block4))
+         rxn_clean = [el.replace('\n', '') for el in rxn_dirty]
+         rxn_clean = [el.replace('\xa0', '') for el in rxn_clean]
+         rxn_clean = [el.replace(':', '') for el in rxn_clean]
+         rxn_clean = [el.replace('%', '') for el in rxn_clean]
+         rxn_clean = list(filter(None, rxn_clean))
+         print(rxn_clean)
+
+         # keep only Name, Formula, CAS number - remove everything between 'Other names' and 'Name'/end of list
+
 
          # insert missing CAS number placeholders
 
-         # keep only Name, Formula, CAS number
 
          # separate into Reactants, Products, Solvents
 
          # convert to storable format
 
          # rejoice!
-#         print(body_fulltext)
-         print(start_index)
-         print(reaction_text)
 
          exit()     
 
