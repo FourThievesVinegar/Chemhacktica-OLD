@@ -4,8 +4,18 @@ import time
 import re 
 
 # ============================================================================================
-def mult_repl(text, adict):
-   rx = re.compile('|'.join(map(re.escape, adict)))
+def removeOthernames(stringlist):
+   othnames_indices = [i for i,val in enumerate(stringlist) if val=="Other names"]
+   # 1.  identify all indices where 'Other names' occur
+   range_start = 'Other names'
+   range_end = 'Name'
+   list1 = [x for x in stringlist if not(range_start<=x<=range_end)]   
+   #list1 = [x for x in stringlist print(x)]   
+   print(list1)
+   
+   exit() 
+
+
 # ============================================================================================
 def postpage(s, url, payload):
 
@@ -81,15 +91,20 @@ def getrxns(s, tree):
          rxn_clean = [el.replace(':', '') for el in rxn_clean]
          rxn_clean = [el.replace('%', '') for el in rxn_clean]
          rxn_clean = list(filter(None, rxn_clean))
-         print(rxn_clean)
-
-         # keep only Name, Formula, CAS number - remove everything between 'Other names' and 'Name'/end of list
+         # separate into Reactants, Products, Solvents 
+         prod_index = rxn_clean.index("Product details")
+         solv_index = rxn_clean.index("Solvent details")
+         rct_dirty = rxn_clean[:prod_index]
+         prod_dirty = rxn_clean[prod_index : solv_index]
+         solv_dirty = rxn_clean[solv_index : ]
+         # remove 'Other names' 
+         rct_dirty = removeOthernames(rct_dirty)
+         exit()
 
 
          # insert missing CAS number placeholders
 
 
-         # separate into Reactants, Products, Solvents
 
          # convert to storable format
 
