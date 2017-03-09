@@ -3,14 +3,33 @@ import random
 import time 
 import re 
 
+def getCASnumbers(stringlist):
+#   stringlist=['CAS Number', '109-45-3', 'stuff', 'stuff', 'CAS Number', '453-5-12']
+   cas_numbers = []
+   cas_indices = [i for i,x in enumerate(stringlist) if x=='CAS Number']
+   for ind in cas_indices:
+      cas_numbers.append(stringlist[ind+1]) 
+
+   return cas_numbers
 # ============================================================================================
+# potentially not useful..side burner for now
+# if we wanted more than just CAS number this would need to be revisited
+#=============================================================================================
 def removeOthernames(stringlist):
    othnames_indices = [i for i,val in enumerate(stringlist) if val=="Other names"]
+   print(stringlist)
    # 1.  identify all indices where 'Other names' occur
-   range_start = 'Other names'
-   range_end = 'Name'
+   range_start = 'Name'
+   range_end = 'Other names'
+
+#   for el in stringlist:
+#      print("-----------------")
+#      print("el in outer: ", el)
+#      if(range_start<=el<=range_end):
+#         print("el in inner: ", el)
+##      print(el)
+
    list1 = [x for x in stringlist if not(range_start<=x<=range_end)]   
-   #list1 = [x for x in stringlist print(x)]   
    print(list1)
    
    exit() 
@@ -94,21 +113,18 @@ def getrxns(s, tree):
          # separate into Reactants, Products, Solvents 
          prod_index = rxn_clean.index("Product details")
          solv_index = rxn_clean.index("Solvent details")
-         rct_dirty = rxn_clean[:prod_index]
-         prod_dirty = rxn_clean[prod_index : solv_index]
-         solv_dirty = rxn_clean[solv_index : ]
-         # remove 'Other names' 
-         rct_dirty = removeOthernames(rct_dirty)
-         exit()
-
-
-         # insert missing CAS number placeholders
-
-
+         reactants  = rxn_clean[:prod_index]
+         products   = rxn_clean[prod_index : solv_index]
+         solvents   = rxn_clean[solv_index : ]
+         # grab CAS numbers
+         rct_cas_nums = getCASnumbers(reactants)
+#         print(rct_cas_nums)
 
          # convert to storable format
 
          # rejoice!
+
+         # debug
 
          exit()     
 
