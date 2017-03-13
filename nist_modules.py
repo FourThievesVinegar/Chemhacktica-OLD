@@ -4,11 +4,13 @@ import time
 import re 
 
 def getCASnumbers(stringlist):
-#   stringlist=['CAS Number', '109-45-3', 'stuff', 'stuff', 'CAS Number', '453-5-12']
    cas_numbers = []
    cas_indices = [i for i,x in enumerate(stringlist) if x=='CAS Number']
    for ind in cas_indices:
       cas_numbers.append(stringlist[ind+1]) 
+   # make sure there are three items in list to be returned
+   while(len(cas_numbers) < 3):
+      cas_numbers.append('NA')
 
    return cas_numbers
 # ============================================================================================
@@ -89,7 +91,7 @@ def getrxns(s, tree):
    # get Details info
    details = tree.xpath('//td/a[contains(@href,"Detail")]/@href')
 
-   # acess site using getpage
+   # access site using getpage
    for d in details:
       url = 'http://kinetics.nist.gov/solution/' +  d
       r = getpage(s, url)
@@ -97,42 +99,41 @@ def getrxns(s, tree):
       # ensure there are reactant, product and solvent blocks in the reaction info
       blocks = tree.xpath('(//b[text()="Name"]/preceding-sibling::b/font/text())')
       if(len(blocks)==3):
-          # go about isolating reaction info (all three blocks mentioned above)
-          # so beautiful i dont want to delete it............
-#         body_xpath = '//p/b/font[text()="Reactant details"]/parent::*/parent::*/parent::*/descendant-or-self::*/text()'
+         # rxn_dirty is full block of reaction info
          body_path = '//body/descendant-or-self::*/text()'
          body_text = tree.xpath(body_path)
          start_index = body_text.index("Reactant details")
          rxn_dirty = body_text[start_index : ]
-         # next clean up using multiple replacements
+         # rxn_clean is cleaned up block of reaction info
          rxn_clean = [el.replace('\n', '') for el in rxn_dirty]
          rxn_clean = [el.replace('\xa0', '') for el in rxn_clean]
          rxn_clean = [el.replace(':', '') for el in rxn_clean]
          rxn_clean = [el.replace('%', '') for el in rxn_clean]
          rxn_clean = list(filter(None, rxn_clean))
-         # separate into Reactants, Products, Solvents 
+         # separate block  into reactants, products, and solvents 
          prod_index = rxn_clean.index("Product details")
          solv_index = rxn_clean.index("Solvent details")
          reactants  = rxn_clean[:prod_index]
          products   = rxn_clean[prod_index : solv_index]
          solvents   = rxn_clean[solv_index : ]
-         # grab CAS numbers
+         # grab CAS numbers of reactants, products and solvents
          rct_cas_nums = getCASnumbers(reactants)
-#         print(rct_cas_nums)
-
+         prd_cas_nums = getCASnumbers(products)
+         slv_cas_nums = getCASnumbers(solvents)
          # convert to storable format
-
-         # rejoice!
+         rxn_cas_nums = "|".join([rct_cas_nums[0], rct_cas_nums[1], rct_cas_nums[2],
+                                  prd_cas_nums[0], prd_cas_nums[1], prd_cas_nums[2],
+                                  slv_cas_nums[0], slv_cas_nums[1], slv_cas_nums[2]])
 
          # debug
 
          exit()     
+         # rejoice!
 
       else:
          print("Incomplete reaction information - data not collected")
          print(len(blocks))
 
-      # restructure data if necessary
 
 #   return rxns
 

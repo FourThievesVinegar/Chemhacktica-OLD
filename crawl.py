@@ -7,8 +7,8 @@ from nist_modules import postpage
 from nist_modules import getrxns
 
 # FILE INFO
-filename = "/home/indra/Documents/Projects/CRN_4TV/DATA/CASRN/result_files/checked/FOR_NIST_CRAWL/cas_data_1.txt"
-filehandle= open(filename, "r")
+infilename = "/home/indra/Documents/Projects/CRN_4TV/DATA/CASRN/result_files/checked/FOR_NIST_CRAWL/cas_data_1.txt"
+inhandle= open(infilename, "r")
 outfilename = "/home/indra/Documents/Projects/Chemhacktica/cas_nist_1.txt"
 outhandle = open(outfilename, "w")
 anomfilename = "/home/indra/Documents/Projects/Chemhacktica/anom_output.txt"
@@ -20,7 +20,7 @@ s = requests.Session()
 # URL
 url = 'http://kinetics.nist.gov/solution/SearchForm'
 
-for line in filehandle:
+for line in inhandle:
    print('===============================')
    fields = line.split('|')
    #rct1 = fields[0] 
@@ -47,6 +47,7 @@ for line in filehandle:
       elif(len(text4)==0):
          print("There were", len(text4), "results.\n")
    except IndexError: 
+      # put exit() here to test whats going on - i forgot
       print("Anomalous CASRN: ", rct1)
       row = []
       row = " | ".join([rct1, fields[1], fields[2]])
