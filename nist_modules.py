@@ -49,7 +49,7 @@ def postpage(s, url, payload):
       try:
          r = s.post(url, data = payload, timeout=(9,33.3))
          if(r.status_code==200):
-            print('Status OK: ', r.status_code)
+#            print('Status OK: ', r.status_code)
             again=False
          else:
             print('Status not OK: ', r.status_code)        
@@ -93,6 +93,8 @@ def getrxns(s, tree):
 
    # access site using getpage
    for d in details:
+      print("~~~~~~~~~~~~~~~~~~~")
+      print("d = ", d)
       url = 'http://kinetics.nist.gov/solution/' +  d
       r = getpage(s, url)
       tree = html.fromstring(r.content)
@@ -125,16 +127,17 @@ def getrxns(s, tree):
                                   prd_cas_nums[0], prd_cas_nums[1], prd_cas_nums[2],
                                   slv_cas_nums[0], slv_cas_nums[1], slv_cas_nums[2]])
 
-         # debug
+   
+         print(rxn_cas_nums)
+            
 
-         exit()     
          # rejoice!
 
       else:
          print("Incomplete reaction information - data not collected")
          print(len(blocks))
 
-
+#       exit()
 #   return rxns
 
 # ============================================================================================

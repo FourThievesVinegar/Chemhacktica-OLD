@@ -21,11 +21,10 @@ s = requests.Session()
 url = 'http://kinetics.nist.gov/solution/SearchForm'
 
 for line in inhandle:
-   print('===============================')
+#   print('===============================')
    fields = line.split('|')
-   #rct1 = fields[0] 
-   rct1 = "100-00-5"
-   print(rct1)
+   rct1 = fields[0] 
+   #rct1 = "100-00-5"
    payload = {"database":"solution",
               "REACTANT1":rct1, "REACTANT2":"", "REACTANT3":"", 
               "PRODUCT1":"", "PRODUCT2":"", "PRODUCT3":"", 
@@ -39,13 +38,19 @@ for line in inhandle:
    try:
       text4 = re.findall('\d+', text3[0]) 
       if(len(text4)!=0 and text4[0]!='0'):
+         print('==============================================================')
+         print('**************************************************************')
+         print('==============================================================')
+         print(rct1)
          print("There were", text4[0], "results.\n")
          rxn = getrxns(s, tree)
          row = []
          row = " | ".join([rct1, text4[0], fields[1], fields[2]])
          outhandle.writelines(row+'\n')
+#         exit()
       elif(len(text4)==0):
-         print("There were", len(text4), "results.\n")
+         #print("There were", len(text4), "results.\n")
+         x=1
    except IndexError: 
       # put exit() here to test whats going on - i forgot
       print("Anomalous CASRN: ", rct1)
