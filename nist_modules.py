@@ -52,12 +52,12 @@ def postpage(s, url, payload):
 #            print('Status OK: ', r.status_code)
             again=False
          else:
-            print('Status not OK: ', r.status_code)        
-            print('sleeping for', sleepy_time, 'seconds.....')
+#            print('Status not OK: ', r.status_code)        
+#            print('sleeping for', sleepy_time, 'seconds.....')
             time.sleep(sleepy_time)
       except Exception as e:
-         print('Exception: ', e)
-         print('sleeping for', sleepy_time, 'seconds.....')
+#         print('Exception: ', e)
+#         print('sleeping for', sleepy_time, 'seconds.....')
          time.sleep(sleepy_time)
 
    return r
@@ -73,15 +73,15 @@ def getpage(s, url):
       try:
          r = s.get(url, timeout=(9,33.3))
          if(r.status_code==200):
-            print('Status OK: ', r.status_code)
+#            print('Status OK: ', r.status_code)
             again=False
          else:
-            print('Status not OK: ', r.status_code)        
-            print('sleeping for', sleepy_time, 'seconds.....')
+#            print('Status not OK: ', r.status_code)        
+#            print('sleeping for', sleepy_time, 'seconds.....')
             time.sleep(sleepy_time)
       except Exception as e:
-         print('Exception: ', e)
-         print('sleeping for', sleepy_time, 'seconds.....')
+#         print('Exception: ', e)
+#         print('sleeping for', sleepy_time, 'seconds.....')
          time.sleep(sleepy_time)
 
    return r
@@ -91,10 +91,11 @@ def getrxns(s, tree):
    # get Details info
    details = tree.xpath('//td/a[contains(@href,"Detail")]/@href')
 
+   rxn_cas_nums = []
    # access site using getpage
    for d in details:
-      print("~~~~~~~~~~~~~~~~~~~")
-      print("d = ", d)
+#      print("~~~~~~~~~~~~~~~~~~~")
+#      print("d = ", d)
       url = 'http://kinetics.nist.gov/solution/' +  d
       r = getpage(s, url)
       tree = html.fromstring(r.content)
@@ -123,22 +124,20 @@ def getrxns(s, tree):
          prd_cas_nums = getCASnumbers(products)
          slv_cas_nums = getCASnumbers(solvents)
          # convert to storable format
-         rxn_cas_nums = "|".join([rct_cas_nums[0], rct_cas_nums[1], rct_cas_nums[2],
-                                  prd_cas_nums[0], prd_cas_nums[1], prd_cas_nums[2],
-                                  slv_cas_nums[0], slv_cas_nums[1], slv_cas_nums[2]])
-
-   
-         print(rxn_cas_nums)
-            
-
-         # rejoice!
+         single_rxn_cas_nums = "|".join([rct_cas_nums[0], rct_cas_nums[1], rct_cas_nums[2],
+                                         prd_cas_nums[0], prd_cas_nums[1], prd_cas_nums[2],
+                                         slv_cas_nums[0], slv_cas_nums[1], slv_cas_nums[2]])
+         # max list of all reactions 
+         rxn_cas_nums.append(single_rxn_cas_nums)
+#         print(rxn_cas_nums)
 
       else:
-         print("Incomplete reaction information - data not collected")
-         print(len(blocks))
+#         print("Incomplete reaction information - data not collected")
+#         print(len(blocks))
+          x = 1
 
 #       exit()
-#   return rxns
+   return rxn_cas_nums
 
 # ============================================================================================
 

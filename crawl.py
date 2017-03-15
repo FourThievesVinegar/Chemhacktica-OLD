@@ -20,8 +20,8 @@ s = requests.Session()
 # URL
 url = 'http://kinetics.nist.gov/solution/SearchForm'
 
+found = 0
 for line in inhandle:
-#   print('===============================')
    fields = line.split('|')
    rct1 = fields[0] 
    #rct1 = "100-00-5"
@@ -38,16 +38,21 @@ for line in inhandle:
    try:
       text4 = re.findall('\d+', text3[0]) 
       if(len(text4)!=0 and text4[0]!='0'):
-         print('==============================================================')
-         print('**************************************************************')
-         print('==============================================================')
-         print(rct1)
-         print("There were", text4[0], "results.\n")
+         print(found)
+         found += 1
          rxn = getrxns(s, tree)
          row = []
          row = " | ".join([rct1, text4[0], fields[1], fields[2]])
          outhandle.writelines(row+'\n')
-#         exit()
+         if(found==3):
+            print('==============================================================')
+            print('**************************************************************')
+            print('==============================================================')
+            print("Found reaction: ", found)
+            print(rct1)
+            print("There were", text4[0], "results.\n")
+            print(rxn)
+            exit()
       elif(len(text4)==0):
          #print("There were", len(text4), "results.\n")
          x=1
@@ -58,7 +63,6 @@ for line in inhandle:
       row = " | ".join([rct1, fields[1], fields[2]])
       anomhandle.writelines(row+'\n')
 
-#   exit()
 outhandle.close()
 anomhandle.close()
 
