@@ -94,17 +94,16 @@ def getrxns(s, tree):
    rxn_cas_nums = []
    # access site using getpage
    for d in details:
-#      print("~~~~~~~~~~~~~~~~~~~")
-#      print("d = ", d)
       url = 'http://kinetics.nist.gov/solution/' +  d
       r = getpage(s, url)
-      tree = html.fromstring(r.content)
+      tree_d = html.fromstring(r.content)
       # ensure there are reactant, product and solvent blocks in the reaction info
-      blocks = tree.xpath('(//b[text()="Name"]/preceding-sibling::b/font/text())')
+      blocks = tree_d.xpath('(//b[text()="Name"]/preceding-sibling::b/font/text())')
       if(len(blocks)==3):
          # rxn_dirty is full block of reaction info
          body_path = '//body/descendant-or-self::*/text()'
-         body_text = tree.xpath(body_path)
+         body_text = tree_d.xpath(body_path)
+         # ...... jump to where the reaction starts
          start_index = body_text.index("Reactant details")
          rxn_dirty = body_text[start_index : ]
          # rxn_clean is cleaned up block of reaction info
@@ -113,31 +112,26 @@ def getrxns(s, tree):
          rxn_clean = [el.replace(':', '') for el in rxn_clean]
          rxn_clean = [el.replace('%', '') for el in rxn_clean]
          rxn_clean = list(filter(None, rxn_clean))
-         # separate block  into reactants, products, and solvents 
-         prod_index = rxn_clean.index("Product details")
-         solv_index = rxn_clean.index("Solvent details")
-         reactants  = rxn_clean[:prod_index]
-         products   = rxn_clean[prod_index : solv_index]
-         solvents   = rxn_clean[solv_index : ]
-         # grab CAS numbers of reactants, products and solvents
-         rct_cas_nums = getCASnumbers(reactants)
-         prd_cas_nums = getCASnumbers(products)
-         slv_cas_nums = getCASnumbers(solvents)
-         # convert to storable format
-         single_rxn_cas_nums = "|".join([rct_cas_nums[0], rct_cas_nums[1], rct_cas_nums[2],
-                                         prd_cas_nums[0], prd_cas_nums[1], prd_cas_nums[2],
-                                         slv_cas_nums[0], slv_cas_nums[1], slv_cas_nums[2]])
-         # max list of all reactions 
-         rxn_cas_nums.append(single_rxn_cas_nums)
-#         print(rxn_cas_nums)
+         nname = rxn_clean.count("Name")
+         ncas = rxn_clean.count("CAS Number")
+         if(ncas==nname):
+            # separate block  into reactants, products, and solvents 
+            prod_index = rxn_clean.index("Product details")
+            solv_index = rxn_clean.index("Solvent details")
+            reactants  = rxn_clean[:prod_index]
+            products   = rxn_clean[prod_index : solv_index]
+            solvents   = rxn_clean[solv_index : ]
+            # grab CAS numbers of reactants, products and solvents
+            rct_cas_nums = getCASnumbers(reactants)
+            prd_cas_nums = getCASnumbers(products)
+            slv_cas_nums = getCASnumbers(solvents)
+            # convert to storable format
+            single_rxn_cas_nums = "|".join([rct_cas_nums[0], rct_cas_nums[1], rct_cas_nums[2],
+                                            prd_cas_nums[0], prd_cas_nums[1], prd_cas_nums[2],
+                                            slv_cas_nums[0], slv_cas_nums[1], slv_cas_nums[2]])
+            # create finla, full list of all reactions 
+            rxn_cas_nums.append(single_rxn_cas_nums)
 
-      else:
-#         print("Incomplete reaction information - data not collected")
-#         print(len(blocks))
-          x = 1
-
-#       exit()
    return rxn_cas_nums
-
 # ============================================================================================
 
