@@ -7,6 +7,8 @@ from nist_modules import getrxns
 # FILE INFO
 infilename = "/home/indra/Documents/Projects/CRN_4TV/DATA/CASRN/result_files/checked/FOR_NIST_CRAWL/cas_data_1.txt"
 inhandle= open(infilename, "r")
+outfilename = "/home/indra/Documents/Projects/CRN_4TV/DATA/RXN_RESULTS/nist_reactions.txt"
+outfile = open(outfilename, "w")
 anomfilename = "/home/indra/Documents/Projects/Chemhacktica/anom_output.txt"
 anomhandle = open(anomfilename, "w")
 
@@ -15,17 +17,22 @@ s = requests.Session()
 
 # URL
 url = 'http://kinetics.nist.gov/solution/SearchForm'
-
 found = 0
+
+# header for results file
+header = "|".join(["RXN_NUMBER ", "CASRN_RCT ", 
+                  "RCT1 ", "RCT2 ", "RCT3 ",
+                  "PRD1 ", "PRD2 ", "PRD3 ",
+                  "SLV1 ", "SLV2 ", "SLV3 "])
+outfile.writelines(header+'\n')
 for line in inhandle:
    fields = line.split('|')
-   #rct1 = fields[0] 
-   rct1 = "100-00-5"
+   rct1 = fields[0] 
+   #rct1 = "100-00-5"
    payload = {"database":"solution",
               "REACTANT1":rct1, "REACTANT2":"", "REACTANT3":"", 
               "PRODUCT1":"", "PRODUCT2":"", "PRODUCT3":"", 
               "SOLVENT1":"", "SOLVENT2":"", "SOLVENT3":""}
-
    r = postpage(s, url, payload)
    tree = html.fromstring(r.content)
    nresult = tree.xpath('//td[@valign="TOP"][@width="100%"]/text()')
@@ -34,21 +41,13 @@ for line in inhandle:
    try:
       nresult = re.findall('\d+', nresult[0]) 
       if(len(nresult)!=0 and nresult[0]!='0'):
-         found += 1
          rxn = getrxns(s, tree)
          print(rxn)
-         exit()
-#         row = []
-#         row = " | ".join([rct1, nresult[0], fields[1], fields[2]])
-#         if(found==3):
-#            print('==============================================================')
-#            print('**************************************************************')
-#            print('==============================================================')
-#            print("Found reaction: ", found)
-#            print(rct1)
-#            print("There were", nresult[0], "results.\n")
-#            print(rxn)
-#            exit()
+         for item in rxn:
+            found += 1
+            row = "|".join([str(found), rct1, item])
+            outfile.writelines(row+'\n') 
+#         exit()
    except IndexError: 
       # put exit() here to test whats going on - i forgot
       print("Anomalous CASRN: ", rct1)
@@ -57,7 +56,7 @@ for line in inhandle:
       anomhandle.writelines(row+'\n')
 
 anomhandle.close()
-
+outfile.close()
 
 
 
