@@ -24,7 +24,6 @@ for i in range(0,9):
 
    for line in inhandle:
       fields = line.split('|')
-#      print(fields)
       linecnt += 1
       row = []
       if(linecnt > 1):
@@ -33,8 +32,6 @@ for i in range(0,9):
                            fields[3], fields[4], fields[5], 
                            fields[6], fields[7], fields[8], 
                            fields[9], fields[10]])
-
-#      outhandle.writelines(row+'\n')
       outhandle.writelines(row)
 
 inhandle.close()
