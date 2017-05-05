@@ -5,11 +5,11 @@ from nist_modules import postpage
 from nist_modules import getrxns
 
 # FILE INFO
-infilename = "/home/indra/Documents/Projects/CRN_4TV/DATA/CASRN/result_files/checked/FOR_NIST_CRAWL/cas_data_9.txt"
+infilename = "/home/indra/Documents/Projects/CRN_4TV/DATA/CASRN/result_files/checked/FOR_NIST_CRAWL/cas_data_1.txt"
 inhandle= open(infilename, "r")
-outfilename = "/home/indra/Documents/Projects/CRN_4TV/DATA/RXN_RESULTS/nist_reactions_cas_9.txt"
+outfilename = "/home/indra/Documents/Projects/CRN_4TV/DATA/RXN_RESULTS/nist_products_cas_1.txt"
 outfile = open(outfilename, "w")
-anomfilename = "/home/indra/Documents/Projects/CRN_4TV/DATA/RXN_RESULTS/anom_output_9.txt"
+anomfilename = "/home/indra/Documents/Projects/CRN_4TV/DATA/RXN_RESULTS/anom_output_prod_1.txt"
 anomhandle = open(anomfilename, "w")
 
 # create session for connection pooling as we are hitting the same database repeatedly
@@ -38,8 +38,8 @@ for line in inhandle:
       print(rct1)
       #rct1 = "100-00-5"
       payload = {"database":"solution",
-                 "REACTANT1":rct1, "REACTANT2":"", "REACTANT3":"", 
-                 "PRODUCT1":"", "PRODUCT2":"", "PRODUCT3":"", 
+                 "REACTANT1":"", "REACTANT2":"", "REACTANT3":"", 
+                 "PRODUCT1":rct1, "PRODUCT2":"", "PRODUCT3":"", 
                  "SOLVENT1":"", "SOLVENT2":"", "SOLVENT3":""}
       r = postpage(s, url, payload)
       tree = html.fromstring(r.content)
@@ -50,8 +50,10 @@ for line in inhandle:
          nresult = re.findall('\d+', nresult[0]) 
          if(len(nresult)!=0 and nresult[0]!='0'):
             rxn = getrxns(s, tree)
-#            print(rxn)
             for item in rxn:
+#               print("==========")
+#               print(len(rxn))
+#               print(rxn)
                found += 1
                row = "|".join([str(found), rct1, item])
                outfile.writelines(row+'\n') 
