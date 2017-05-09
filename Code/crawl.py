@@ -5,11 +5,11 @@ from nist_modules import postpage
 from nist_modules import getrxns
 
 # FILE INFO
-infilename = "/home/indra/Documents/Projects/CRN_4TV/DATA/CASRN/result_files/checked/FOR_NIST_CRAWL/cas_data_1.txt"
+infilename = "/home/indra/Documents/Projects/CRN_4TV/DATA/CASRN/result_files/checked/FOR_NIST_CRAWL/cas_data_2.txt"
 inhandle= open(infilename, "r")
-outfilename = "/home/indra/Documents/Projects/CRN_4TV/DATA/RXN_RESULTS/nist_products_cas_1.txt"
+outfilename = "/home/indra/Documents/Projects/CRN_4TV/DATA/RXN_RESULTS/nist_products_cas_2.txt"
 outfile = open(outfilename, "w")
-anomfilename = "/home/indra/Documents/Projects/CRN_4TV/DATA/RXN_RESULTS/anom_output_prod_1.txt"
+anomfilename = "/home/indra/Documents/Projects/CRN_4TV/DATA/RXN_RESULTS/anom_prod_2.txt"
 anomhandle = open(anomfilename, "w")
 
 # create session for connection pooling as we are hitting the same database repeatedly
@@ -31,12 +31,11 @@ found_place = False
 for line in inhandle:
    fields = line.split('|')
    rct1 = fields[0] 
-#   if '712-68-5' in line:
+#   if '135807-14-6' in line:
 #      found_place = True
    found_place = True
    if found_place:
       print(rct1)
-      #rct1 = "100-00-5"
       payload = {"database":"solution",
                  "REACTANT1":"", "REACTANT2":"", "REACTANT3":"", 
                  "PRODUCT1":rct1, "PRODUCT2":"", "PRODUCT3":"", 
