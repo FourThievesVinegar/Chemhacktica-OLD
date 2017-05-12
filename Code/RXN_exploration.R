@@ -7,14 +7,11 @@ df.data <- read.table(filename, header=TRUE, sep="|")
 # MOST FREQUENT REACTANTS
 df.casfreq <- as.data.frame(table(df.data$CASRN_RCT))
 colnames(df.casfreq) <- c("CASRN_RCT", "Freq")
+# kin distribution
 df.kinfreq <- as.data.frame(table(df.casfreq$Freq))
 x <- as.numeric(df.kinfreq$Var1)
 y <- as.numeric(df.kinfreq$Freq)
 d <- data.frame(x,y)
-#plot(log(x),log(y))
-
-#set.seed(5)
-#d <- data.frame(x=1:100, y=rlnorm(100, meanlog=5, sdlog=3))
 
 with(d, {
    plot(x, y, log="y", yaxt="n", xaxt="n", ylab="Number of Nodes", xlab="kin")
@@ -29,6 +26,7 @@ with(d, {
    axis(1, 10^powx)
    axis(1, ticksatx, labels=NA, tcl=-0.25, lwd=0, lwd.ticks=1)
 })
+
 
 
 summary(casrn_count$Freq)
