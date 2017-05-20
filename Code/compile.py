@@ -3,10 +3,10 @@
 # FILE INFO
 rootdir = "/home/indra/Documents/Projects/CRN_4TV/DATA/RXN_RESULTS/"
 ID1 = ['O', 'W', 'R', 'F', 'V', 'X', 'S', 'E', 'N']
-ID2 = 'R'
+ID2 = 'P'
 
 # output file
-outfilename = rootdir + "nist_reactions.txt"
+outfilename = rootdir + "nist_products.txt"
 outhandle = open(outfilename, "w")
 header = "|".join(["RXN_ID", "CASRN_RCT ", 
                    "RCT1 ", "RCT2 ", "RCT3 ",
@@ -17,7 +17,7 @@ outhandle.writelines(header+'\n')
 for i in range(0,9):
   
    # input file 
-   infilename = rootdir +  "nist_reactions_cas_" + str(i+1) + ".txt"
+   infilename = rootdir +  "nist_products_cas_" + str(i+1) + ".txt"
    inhandle = open(infilename, "r")
 
    linecnt = 0  
